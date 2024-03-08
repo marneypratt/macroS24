@@ -1,0 +1,608 @@
+---
+title: "Macroinvertebrate Data Analysis"
+author: "Marney Pratt"
+date: "October 31, 2023"
+format: 
+  html:
+    code-overflow: wrap
+    embed-resources: true
+---
+
+# Getting Setup
+
+Keep all of your analysis in this same .qmd file and keep all the associated files in the project folder. Make sure the project name is showing in the upper right of the RStudio window.
+
+## Load packages
+
+```{r}
+#| label: setup
+#| message: false
+#| warning: false
+
+library(tidyverse) ## for readr, dplyr, ggplot2
+#library(vegan) ## for calculating diversity measures (you can remove this if you are not calculating diversity measures)
+library(ggbeeswarm) ## for jittering points (you can remove this is you did not use a dotplotv)
+library(flextable) ## for making formatted tables that can be pasted into Word or Google Docs
+
+```
+
+## Import Data
+
+Figure out which data file(s) you need to import (see the metadata files for more information about each data file).
+
+Find the code you need by clicking on the "script_templates" folder then selecting the "importing_data" folder in the "Files" tab in the lower right area of RStudio.
+
+Copy and paste the code you need into the chunk below (Do **NOT** run the code directly from the script template, copy and paste the template code below)
+
+```{r}
+#| label: import data
+
+env <- read_csv("data/env.csv",
+         col_types = cols(date = col_date(format = "%Y-%m-%d"),
+          
+          location = col_factor(levels = c(
+            "Downstream","Upstream")), 
+          
+          season = col_factor(levels = c("Summer","Fall")), 
+          
+          year = col_factor()
+         )) 
+
+macros <- read_csv("data/macros.csv",
+           col_types = cols(date = col_date(format = "%Y-%m-%d"),
+            
+            location = col_factor(levels = c(
+              "Downstream","Upstream")), 
+            
+            season = col_factor(levels = c("Summer","Fall")), 
+            
+            year = col_factor()
+           )) 
+
+
+master.taxa <- read_csv("data/master.taxa.csv",
+                show_col_types = FALSE)  |>  
+  distinct()
+
+
+```
+
+# Data Wrangling
+
+Find the code you need to prepare or "wrangle" your data to make any calculations needed and combine any datasets you need to combine by looking in the "data_wrangling" folder within the "script_templates" folder. Copy and paste the code you need in the chunk below.
+
+Note, once you have completed this code chunk, you should have a new data frame that has ONE value per sampleID. You will then use this new data frame going forward.
+
+```{r}
+#| label: data wrangling
+#| message: false
+#| warning: false
+
+#calculate density for each sampleID
+density.df <- macros |> 
+  
+  #join taxa info
+  left_join(master.taxa) |>
+  
+  # Summarize for each sampleID and each genus 
+  group_by(sampleID, genus) |> 
+  dplyr::summarise(density = sum(invDens, na.rm = TRUE)) |> 
+  
+  #fill in group combos where there were none present with zeros
+  ungroup() |> 
+  complete(sampleID, genus,
+           fill = list(density = 0)) |> 
+  
+  #filter for genus of interest 
+  #this needs to match what is in the macros file
+  #replace this blank with the genus you want to keep
+  filter(genus == "Ferrissia")
+
+#get sample info and env variables of interest
+variables <- macros |>
+  
+  #join environmental variables
+  left_join(env) |> 
+  
+  #select variables of interest
+  #delete anything you don't need
+  #add anything you do need in the blank with commas in between
+  dplyr::select(date, sampleID, season, year, location, benthicArea,
+                DO, wTemp) |> 
+  distinct()
+
+#add sample info back to density data
+my.df <- left_join(density.df, variables) |> 
+  
+  #filter out anything you don't want
+  #the example below would filter out just the year 2018
+  dplyr::filter(year != "2018") |> 
+  
+  #remove rows with missing data
+  na.omit()
+
+```
+
+# Data Description
+
+## Summary Table of Sampling Effort
+
+Make a table of the data that you used in your analysis (how many samples and how much area was sampled in each of the groups) to include in the Data Analysis Methods section of your paper. Go to the "data_description" script templates and select the correct version of the 'sample_table' script based on which factors you are using and paste that code below.
+
+```{r}
+#| label: tbl-sample-table
+#| tbl-cap: Sample Summary Table
+#| include: true
+
+
+table.sum <- my.df |>  #put the name of your wrangled data here
+  
+  #summarize by date, season, & location (to get number of microhabs and area sampled per date)
+  group_by(date, season, location) |> 
+  summarize(
+    area = sum(benthicArea),
+    samples = n()) |> 
+  
+  #summarize by season & location 
+  group_by(season, location) |> 
+  summarize(
+    dates = str_c(date, collapse = ", "),
+    samples = sum(samples),
+    area = sum(area))  
+
+#To get a formatted table, make sure that the {flextable} package is loaded
+#Use additional code to create the summary table called "table.sum"
+#If you want to format the table yourself, then don't use this code
+
+#see https://davidgohel.github.io/flextable/ for more information and formatting options
+
+#create the formatted table
+ft <- flextable(table.sum) |> 
+
+#create header labels
+set_header_labels(season = "Season",
+                  location = "Location",
+                  dates = "Dates",
+                  samples = "# of Samples",
+                  area = "Total Area Sampled (m^2)") |> 
+
+  #format superscript
+  compose(j = "area", part="header",
+          value = as_paragraph(
+            "Total Area Sampled (m", 
+            as_sup("2"),
+            ")")) |> 
+  
+  #formatting
+  theme_vanilla()  |>  
+  fontsize(size = 10) |> 
+  
+  #set table properties
+  set_table_properties(layout = "autofit", width = 1) |> 
+  
+  #center columns
+  align(align = "center", part = "all" )
+
+#print the table
+#right click on the table, choose select all, 
+#choose copy, then paste in your document
+#finish formatting as needed in your document
+ft
+
+
+
+```
+
+
+## Descriptive Statistics
+
+Use the template code below to calculate the descriptive statistics for your variable of interest. 
+
+The output of this code should NOT all be reported in your paper. Decide which (if any) of the descriptive statistics you should report and make sure to round the values. 
+
+Descriptive statistics can be reported in the text of the results (see this [example results section](https://docs.google.com/document/d/1vwyOSmhZzTuIfAEbpeiv3yCsU1UMZDsTXgnbE80nPTU/edit?usp=sharing)) if relatively simple, or you can make a formatted table of just the necessary, rounded values to include in your paper.
+
+```{r}
+#| label: tbl-descriptive-stats-density
+#| tbl-cap: Limpet Density Descriptive Statistics
+#| include: true
+
+#see https://davidgohel.github.io/flextable/ for more information and formatting options
+
+#set the variable you want to summarize
+x.var <- "density" #put the name of the column you want to summarize in the blank here
+
+#calculate descriptive stats
+df.sum <- my.df |> #put the name of the data frame here
+  group_by(season, location) |> #put the grouping variable(s) here
+  filter(!is.na(.data[[x.var]])) |> # remove missing values 
+  
+  #remove the lines below that you don't need 
+  #you won't usually need ALL these values
+  #change the digits as needed
+  summarise(mean = round(mean(.data[[x.var]]), digits=2), 
+            SD = signif(sd(.data[[x.var]]), digits=2),
+            median = round(median(.data[[x.var]]), digits=2),
+            IQR = round(IQR(.data[[x.var]]), digits=2),
+            min = round(min(.data[[x.var]]), digits=2),
+            max = round(max(.data[[x.var]]), digits=2),
+            N = n())
+
+#create the table
+ft <- flextable(df.sum,
+                cwidth=0.75) |>  #can vary cell width as needed
+  
+  #bold the headings
+  bold(part="header") |> 
+  
+  #center columns
+  align(align = "center", part = "all" )
+
+#print the table
+#right click on the table, choose select all, 
+#choose copy, then paste in your document
+#finish formatting as needed in your document
+ft
+
+```
+
+```{r}
+#| label: tbl-descriptive-stats-DO
+#| tbl-cap: Dissolved Oxygen Descriptive Statistics
+#| include: true
+
+#before you run the code below...
+
+#make sure the 'flextable' and `tidyverse` packages are installed and loaded
+#make sure your data are imported
+
+#see https://davidgohel.github.io/flextable/ for more information and formatting options
+
+#set the variable you want to summarize
+x.var <- "DO" #put the name of the column you want to summarize in the blank here
+
+#calculate descriptive stats
+#remove the lines below that you don't need (you won't usually need ALL these values)
+df.sum <- my.df |> #put the name of the data frame here
+  group_by(season, location) |> #put the grouping variable(s) here
+  filter(!is.na(.data[[x.var]])) |> # remove missing values from the variable of interest
+  summarise(mean = round(mean(.data[[x.var]]), digits=2), #change the digits as needed
+            SD = signif(sd(.data[[x.var]]), digits=2),
+            median = round(median(.data[[x.var]]), digits=2),
+            IQR = round(IQR(.data[[x.var]]), digits=2),
+            min = round(min(.data[[x.var]]), digits=2),
+            max = round(max(.data[[x.var]]), digits=2),
+            N = n())
+
+#create the table
+ft <- flextable(df.sum,
+                cwidth=0.75) #can vary cell width as needed
+
+#bold the headings
+ft <- bold(ft, part="header")
+
+#center columns
+ft <- align(ft, align = "center", part = "all" )
+
+#print the table
+#right click on the table, choose select all, 
+#choose copy, then paste in your document
+#finish formatting as needed in your document
+ft
+
+```
+
+```{r}
+#| label: tbl-descriptive-stats-wTemp
+#| tbl-cap: Water Temperature Descriptive Statistics
+#| include: true
+
+#before you run the code below...
+
+#make sure the 'flextable' and `tidyverse` packages are installed and loaded
+#make sure your data are imported
+
+#see https://davidgohel.github.io/flextable/ for more information and formatting options
+
+#set the variable you want to summarize
+x.var <- "wTemp" #put the name of the column you want to summarize in the blank here
+
+#calculate descriptive stats
+#remove the lines below that you don't need (you won't usually need ALL these values)
+df.sum <- my.df |> #put the name of the data frame here
+  group_by(season, location) |> #put the grouping variable(s) here
+  filter(!is.na(.data[[x.var]])) |> # remove missing values from the variable of interest
+  summarise(mean = round(mean(.data[[x.var]]), digits=1), #change the digits as needed
+            SD = signif(sd(.data[[x.var]]), digits=2),
+            median = round(median(.data[[x.var]]), digits=1),
+            IQR = round(IQR(.data[[x.var]]), digits=1),
+            min = round(min(.data[[x.var]]), digits=2),
+            max = round(max(.data[[x.var]]), digits=2),
+            N = n())
+
+#create the table
+ft <- flextable(df.sum,
+                cwidth=0.75) #can vary cell width as needed
+
+#bold the headings
+ft <- bold(ft, part="header")
+
+#center columns
+ft <- align(ft, align = "center", part = "all" )
+
+#print the table
+#right click on the table, choose select all, 
+#choose copy, then paste in your document
+#finish formatting as needed in your document
+ft
+
+
+
+```
+
+# Data Visualization
+
+Find the code you need to visualize (=graph) your data by looking in the "graphing" folder within the "script_templates" folder. Copy and paste the code you need in the chunk below.
+
+```{r}
+#| label: limpet density vs DO graph
+#| message: false
+
+# this code will make a scatter plot 
+# if you do not want a line of best fit, then delete the geom_smooth() line
+
+ggplot(
+  data = my.df, #put the data frame name here
+  
+  #set the aesthetics
+  aes(x = DO,       #put the factor on the x-axis
+      y = density + 1,       #continuous variable = y
+      color = location)) + #put the same factor as on x-axis 
+  
+  #add points
+  geom_point(size = 3) +    #sets the size of the points
+  
+  #add best fit line
+  geom_smooth(method = "lm", se = FALSE) + 
+
+  #nicer labels (see axis.labels.R script)
+  xlab("Dissolved Oxygen (mg/L)") +
+  ylab(bquote("Limpet Density (number/"~m^2*")")) +
+  labs(color = "Location") + #label for the color key
+  
+  
+  #additional formatting
+  theme_classic(base_size = 16)  +  #sets the font size
+  theme(legend.position = "top") +  #controls legend/key
+  
+  scale_y_log10() +     #changes y-axis to log-scale
+  annotation_logticks(sides = "l") + # adds log-scale tick marks
+
+  facet_wrap(vars(season))   #place factor to split by facets here
+
+#see the resources below for some additional options to make a nice scatter plot 
+# https://www.datanovia.com/en/lessons/ggplot-scatter-plot/
+# https://ggplot2.tidyverse.org/index.html
+
+```
+
+To save your graph with the `ggsave()` function, you need to name the resulting file with surrounding " ", and indicate the size via height, width, and units. Don't forget to save the graph with a dpi call between 300-500 to make it nice and crisp! Look at the `ggsave()` help file for more information and options.
+
+```{r}
+#| eval: false
+
+
+# save the graph!
+ggsave(filename="images/limpet.DO.png",  #recommended to use.png or .jpg file types
+       height = 5, width = 8, units = "in", 
+       dpi = 300)
+
+```
+
+```{r}
+#| label: limpet density vs wTemp graph
+#| message: false
+
+
+# this code will make a scatter plot 
+# if you do not want a line of best fit, then delete the geom_smooth() line
+
+ggplot(
+  data = my.df, #put the data frame name here
+  
+  #set the aesthetics
+  aes(x = wTemp,       #put the factor on the x-axis
+      y = density + 1,       #continuous variable = y
+      color = location)) + #put the same factor as on x-axis 
+  
+  #add points
+  geom_point(size = 3) +    #sets the size of the points
+  
+  #add best fit line
+  geom_smooth(method = "lm", se = FALSE) + 
+
+  #nicer labels (see axis.labels.R script)
+  xlab("Water Temperature ("~degree~"C)") +
+  ylab(bquote("Limpet Density (number/"~m^2*")")) +
+  labs(color = "Location") + #label for the color key
+  
+  
+  #additional formatting
+  theme_classic(base_size = 16)  +  #sets the font size
+  theme(legend.position = "top") +  #controls legend/key
+  
+  scale_y_log10() +     #changes y-axis to log-scale
+  annotation_logticks(sides = "l") + # adds log-scale tick marks
+
+  facet_wrap(vars(season))   #place factor to split by facets here
+
+#see the resources below for some additional options to make a nice scatter plot 
+# https://www.datanovia.com/en/lessons/ggplot-scatter-plot/
+# https://ggplot2.tidyverse.org/index.html
+
+```
+
+```{r}
+#| eval: false
+
+
+# save the graph!
+ggsave(filename="images/limpet.wTemp.png",  #recommended to use.png or .jpg file types
+       height = 5, width = 8, units = "in", 
+       dpi = 300)
+
+```
+
+```{r}
+
+#| label: wTemp vs season and location
+
+#this code will make a dot plot with median and all points included
+#make sure you have loaded the ggbeeswarm package to use geom_quasirandom()
+
+ggplot(
+  data = my.df, #put the data frame name here
+  
+  #set the aesthetics
+  aes(x = location,       #put the factor on the x-axis
+      y = wTemp,       #continuous variable = y
+      color = location)) + #same factor as x-axis for color
+  
+  #adds quasirandom jittered points
+  geom_quasirandom(
+    shape = 19,            #shape as circle
+    size = 2,              #size of point
+    alpha = 0.8,           #transparency
+    width = 0.25) +        #spread
+  
+  #adds median
+  stat_summary(
+    fun = median,       #graphs the median
+    geom = "crossbar",  #crossbar shape
+    width = 0.5,        #width of the bar
+    size = 0.75,        #size
+    color = "black") +  #color 
+  
+  #nicer labels (see axis.labels.R script)
+  ylab("Water Temperature ("~degree~"C)") +
+  xlab("Location") +
+  
+  #additional formatting
+  theme_classic(base_size = 16)  +  #sets the font size
+  theme(legend.position = "none") +  #controls legend/key
+
+  facet_wrap(vars(season))   #place factor to split by facets here
+
+#see the resources below for some additional options to make a nice plot 
+# https://www.datanovia.com/en/lessons/ggplot-dot-plot/
+# https://ggplot2.tidyverse.org/index.html
+
+```
+
+```{r}
+#| eval: false
+
+# save the graph!
+ggsave(filename="images/wTemp.season.png",  #recommended to use.png or .jpg file types
+       height = 5, width = 8, units = "in", 
+       dpi = 300)
+
+```
+
+```{r}
+#| label: DO vs wTemp graph
+#| message: false
+
+# this code will make a scatter plot 
+# if you do not want a line of best fit, then delete the geom_smooth() line
+
+ggplot(
+  data = my.df, #put the data frame name here
+  
+  #set the aesthetics
+  aes(x = wTemp,       #put the factor on the x-axis
+      y = DO,       #continuous variable = y
+      color = location)) + #put the same factor as on x-axis 
+  
+  #add points
+  geom_point(size = 3) +    #sets the size of the points
+  
+  #add best fit line
+  geom_smooth(method = "lm", se = FALSE) + 
+
+  #nicer labels (see axis.labels.R script)
+  ylab("Dissolved Oxygen (mg/L)") +
+  xlab("Water Temperature ("~degree~"C)") +
+  labs(color = "Location") + #label for the color key
+  
+  
+  #additional formatting
+  theme_classic(base_size = 16)  +  #sets the font size
+  theme(legend.position = "top")   #controls legend/key
+
+#see the resources below for some additional options to make a nice scatter plot 
+# https://www.datanovia.com/en/lessons/ggplot-scatter-plot/
+# https://ggplot2.tidyverse.org/index.html
+
+```
+
+```{r}
+#| eval: false
+
+# save the graph!
+ggsave(filename="images/wTemp.DO.png",  #recommended to use.png or .jpg file types
+       height = 5, width = 8, units = "in", 
+       dpi = 300)
+
+```
+
+# Citing R in Your Paper
+
+In the Data Analysis Methods section of your paper, you need to cite how the data were analyzed including (1) any calculations done (for example, how was density calculated?), and (2) what software was used for the analysis.
+
+Here is a detailed explanation of How to Cite R in your Methods.
+
+You need to cite base R but how will you know what version of R you are using?
+
+You should also cite the **most important packages used**.
+
+All of you should cite the {tidyverse} super package since we used {reader}, {dplyr}, and {ggplot2} to import, wrangle, and graph our data. If you used the dot plot in your paper, then you also used {ggbeeswarm} which is NOT part of the {tidyverse} so it needs to be cited separately. If you used the formatted table in your paper, then cite the {flextable} package. If you used {vegan} to calculate any diversity indices then make sure to cite it.
+
+To properly cite packages, you need to find out the information needed for each package. Run the code below to determine the version of R and packages used. (note that you do NOT need to cite ALL of the packages that the `sessionInfo` function spits out. See above for what you need to cite)
+
+```{r}
+#| label: sessionInfo
+
+sessionInfo()
+
+```
+
+The above is the information you need to cite which version of R as well as any packages you used. While the version number is necessary, you also need more information to cite R and the packages. Refer to [How to Cite R in your Methods](https://docs.google.com/presentation/d/1RG4_R-MDOy1vbMz-M1gfOcMtgqWu9Kvv_R4ex5QdcVk/edit?usp=sharing) to help you figure out how to cite in the text as well as the full citation in the Literature Cited section at the end of your paper.
+
+Use the code below to get more necessary information to cite R itself
+
+```{r}
+#| label: cite R
+
+#citation info for base R 
+citation()
+
+```
+
+Use the code below to cite the {tidyverse} package and then repeat the code replacing "tidyverse" with any other packages you need to cite
+
+```{r}
+#| label: cite tidyverse
+
+#citation info for base R 
+citation("tidyverse")
+
+```
+
+## Rendering
+
+Don't forget to "render" your .qmd file when you are done. Make sure that each code chunk has an unique label name or no name before you render. Make sure all your files are in the project folder.
+
+Render straight to HTML, open the HTML file in your browser, and then "print" to a PDF file.
+
+Insert a file printout of the PDF in the "Project Data Analysis" section of your Lab Notebook.

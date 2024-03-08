@@ -1,0 +1,381 @@
+This file was originally generated on 2018-08-31 and revised on 2023-08-25 by Marney Pratt
+
+
+-------------------
+GENERAL INFORMATION
+-------------------
+
+
+1. Title of Dataset 
+
+Mill River Water Quality Data for 2018-2023
+
+
+2. Author Information
+
+
+  Principal Investigator Contact Information
+        Name: Marney Pratt
+           Institution: Smith College
+           Address: 44 College Ln, Northampton, MA 01063
+           Email: mcpratt@smith.edu
+
+
+
+3. Date of data collection (single date, range, approximate date) <dates in format YYYY-MM-DD>
+
+2018-06 to 2023-06
+
+
+4. Geographic location of data collection (where was data collected?): 
+
+Mill River in Northampton, MA  USA
+
+
+
+5. Information about funding sources that supported the collection of the data:
+
+Smith College Facilities Management funded summary salary for Marney Pratt and 
+various Summer Undergradate Research Fellowships awarded to students
+
+The Horner Fund also funded Summer Undergradate Research Fellowships to several students 
+
+The Smith College Department of Biological Sciences funded some of the materials and supplies in 
+addition to Smith College Facilities Management
+
+--------------------------
+SHARING/ACCESS INFORMATION
+-------------------------- 
+
+
+1. Licenses/restrictions placed on the data:
+No restrictions other than proper citation/attribution
+
+
+2. Recommended citation for this metadata text file:
+
+Pratt, MC.  2023.  Mill River water quality data metadata for 2018-2023.  Smith College, Northampton, MA.
+
+7. Recommended citation for the data:
+
+Pratt, MC.  2023.  Mill River water quality data for 2018-2023.  Smith College, Northampton, MA.
+
+
+
+---------------------
+DATA & FILE OVERVIEW
+---------------------
+
+
+1. File List
+   A. Filename: waterQ.csv       
+      Short description:
+Water quality data were measured for both locations (upstream and downstream riffle) in May/June & September/October 2018-2023
+
+
+--------------------------
+METHODOLOGICAL INFORMATION
+--------------------------
+
+
+1. Description of methods used for collection/generation of data: 
+
+Measurements were taken upstream and downstream of Paradise Pond in Northampton, MA in 5 "microhabitat" locations in each area.  
+More details are given below.
+
+
+2. Methods for processing the data: 
+See DATA-SPECIFIC INFORMATION below
+
+3. People involved with sample collection, processing, analysis and/or submission:
+
+Investigators included:
+MP - Marney Pratt
+DL - Denise Lello
+Smith College Bio 131 and SURF students and other volunteers
+
+
+-----------------------------------------
+DATA-SPECIFIC INFORMATION FOR: waterQ.csv
+-----------------------------------------
+
+Variable List
+    
+date: sampling date in year-month-day (yyyy-mm-dd) format
+  dates are all given in year-month-day (yyyy-mm-dd) format (but note that 
+	sometimes Excel will change the date to month/day/year (mm/dd/yyyy) format 
+	if you open and save the .csv file with Excel)
+
+year: year in which the sampling took place
+
+season: season in which the sampling took place 
+  
+    Summer = late May - early June (this is probably more accurately described 
+    as late spring or early summer for this location)
+    Fall = mid September - early October
+
+location: location in the river - Upstream or Downstream of Paradise Pond
+	Coordinates estimated with Google Earth.
+	https://docs.google.com/presentation/d/112FTHi84gQDcd_78vneF7nzcgPe0D2qoUNOyF4ZxU1M/edit?usp=sharing
+
+	Upstream = This site is located in the Mill River upstream of the Paradise 
+	Pond impoundment.  The trail used to get to the river is 	Just off of 
+	Federal St in Northampton, MA.  The coordinates for the center of the area of 
+	the river sampled that is: 
+		UR "downstream of the bend" 42degrees19'09"N  72degrees39'17"W  226m in elevation 
+		UR "upstream of the bend"   42degrees19'17"N  72degrees39'12"W  226m in elevation
+		Note that the "bend"" is the bend in the river where there is a high 
+		retaining wall on one side and the water runs fast and deep
+
+	Downstream = This site is located just downstream of the Paradise Pond Dam and 
+	Lamont Bridge in the Mill River.  
+	The center of the area of the river sampled in is around:  
+	42degrees18'53"N  72degrees38'27"W  150m in elevation
+	
+	Both sites were fast flowing, relatively shallow, riffles with mostly rocky 
+	substrate mixed with more or less sand
+	The upstream site is fairly sandy "downstream of the bend" but we tried to 
+	sample in the rockier areas
+
+sampleID: unique identification code for each sample.
+	example: 01URSU18.UM - first two numbers are the sample number, 
+	the next two letters are for the site (UR = upstream riffle, DR = downstream riffle), 
+	the next two letters are for the season (SU = summer, FA = Fall), 
+	and the last two numbers are for the year (18 = 2018, 19 = 2019).  
+	The letters after the period indicate the microhabitat or NA if the 
+	microhabitat is unknown
+
+	
+	See the map of each habitat for locations including the microhabitats within 
+	the sampling area where samples were taken. 		
+	https://docs.google.com/presentation/d/112FTHi84gQDcd_78vneF7nzcgPe0D2qoUNOyF4ZxU1M/edit?usp=sharing
+
+
+sampleID.prefix: unique identification code for each sample day. 
+  Makes the sampleID when microhabitat is added.  
+
+sampling: what type of sampling occurred on a particular day
+
+	macros: a sample of macroinvertebrates was taken on the same day.  
+	
+	water: no macroinvertebrate sample was taken on the same day.  
+	During these sampling days, both the upstream and downstream locations were 
+	sampled on the same day so that overall weather conditions could be better 
+	controlled for.
+
+sky: weather description for the day (sunny, cloudy, rainy, etc)
+
+startTime
+	Description: the time a measurement was taken using a 24-hour clock in the 
+	Eastern Daylight Timezone
+	
+dateTime.UTC: the date and time in year-month-day hours:minutes:seconds 
+  in the Universal Time Coordinated (UTC) time zone that sampling was started
+
+
+microhabitat: there were 5 microhabitats sampled within each location 
+  (upstream or downstream) as follows
+	
+	DSR - Downstream slow rocky (on the far side of the river (closer to the 
+	athletic fields), just downstream of some larger rocks where the flow is 
+	slower and there are some large rocks)
+	DSP - Downstream sponge area (in the middle of the river, shallow, fast flow, 
+	lots of sponges present)
+	DFR - Downstream fast rocky (on the far side of the river (closer to the 
+	athletic fields), just upstream of some larger rocks where the flow is faster 
+	and there are some large rocks)
+	DM - Downstream middle (in the middle of the river, moderate flow, just 
+	downstream of the sponge area, lots of small and medium sized rocks)
+	DSH - Downstream shady (on the far side of the river (closer to the 
+	athletic fields), in a very fast flow area and very shaded because right below a 
+	tree, further upstream than DFR)
+
+	USR - Upstream slow rocky (on the close side of the river (closer to the path 
+	and the side with the retaining wall, "downstream of the bend"), 
+	just downstream of some larger rocks where the flow is slower and there are 
+	some large rocks)
+	UFR - Upstream fast rocky (on the close side of the river (closer to the path 
+	and the side with the retaining wall, "downstream of the bend"), just upstream 
+	of some larger rocks where the flow is faster and there are some large rocks)
+	UM - Upstream middle (in the middle of the river near some larger rocks, 
+	moderate flow, "downstream of the bend", lots of smallsized rocks)
+	USH - Upstream shady (on the far side of the river ("upstream of the bend", 
+	further from the path we come in on), in a fast flow area and shaded 
+	because right below a tree)
+	USU - Upstream sunny (on the far side of the river ("upstream of the bend", 
+	further from the path we come in on), in a realtively fast flow area 
+	just downstream of USH that is sunnier         
+
+
+quadrat: sample number within a microhabitat on a particular day.  
+  1-3 samples were made in each microhabitat per day
+
+lat: Latitude coordinate 
+  measured by Vernier's LabQuest 2 
+  (uses WGS84, accruacy: half of data points fall within a radius of 2m)
+	https://www.vernier.com/products/interfaces/labq2/
+
+long: Longitude coordinate 
+  measured by Vernier's LabQuest 2 
+  (uses WGS84, accruacy: half of data points fall within a radius of 2m)
+	https://www.vernier.com/products/interfaces/labq2/
+
+alt: Altitude in meters
+  measured by Vernier's LabQuest 2 
+  (uses WGS84, accruacy: half of data points fall within a radius of 2m) 
+  (note that altitude is no longer recorded because it isn't very accurate or 
+  useful in this case)
+	https://www.vernier.com/products/interfaces/labq2/
+
+depth: depth of the water in centimeters taken in the center of the quadrat
+  measured with a meter stick with millimeter marking
+
+pH: the pH 
+	pH was measured using an Oakton pH Testr 50 Waterproof Pocket pH Tester 
+	(accuracy: ±0.01 pH). Effort was made to wait until the meter 
+	stabilized on a reading before the pH was recorded
+	
+	pH was calibrated ahead of time using buffers made using the Vernier pH 
+	capsule set.	
+
+wTemp: Water temperature was measured in Celcius by different tools depending on year
+
+	2018-2019 we used the Vernier Stainless Steel Temperature Probe 
+	(accuracy: ±0.2°C at 0°C, ±0.5°C at 100°C) . 
+	https://www.vernier.com/manuals/tmp-bta/
+	
+	Starting in 2020, we used the Oakton pH Testr 50 Waterproof Pocket pH Tester 
+	(accuracy: ±0.2°C) to minimize the number of different tools to bring in the field
+
+
+	In all cases, the reading taken just below the surface once the reading 
+	seemed to stabilize. 
+
+
+DO: Dissolved oxygen was measured in milligrams of oxygen per liter by the 
+  Vernier Optical Dissolved Oxygen Probe (accurate to ± 0.1 mg/L). 
+	https://www.vernier.com/manuals/odo-bta/
+	
+	The reading taken just below the surface (with the probe all the way in the 
+	water at least up to the temperature sensor) and was a 10 second average. 
+	Effort was made to make sure that the probe had settled on a reading before 
+	it was recorded (it can take a little while for the first reading or two to 
+	settle as the temperature adjusts)
+	
+	The probe was calibrated using a 100% saturation value determined by placing 
+	the probe in the storage cap with distilled water saturating the sponge 
+	(so the air was 100% saturated with water)
+	
+
+light: The photosyntehtically active radiation was measured in photosynthetic 
+  photon flux density (PPFD) which corresponds to the micromoles of photons 
+  per meter squared per second
+	https://www.vernier.com/files/manuals/par-bta.pdf
+	
+	The sensor was mounted on a PVC pipe with one section that was bent to be 
+	parallel to the bottom of the river.  
+	The sensor faced upstream (with the cord facing downstream)
+	and care was taken to not let our shaddows interfere with the sensor.
+	The reading taken was a 10 second average. 
+	
+	PAR range 0 to 2000 umol m-2 s-1 (in full sun)
+	Absolute accuracy ±5% (full scale)
+	Repeatability ±1%
+	Long-term drift Less than 2% per year
+	Cosine response
+		 45º ±2%
+ 		75º ±5%
+	Spectral range 410–655 nm
+	Resolution 1 umol m-2 s-1
+	Operating environment –40 to 70˚ C
+		0–100% relative humidity
+	Sensor head and cable can be submerged in water to electronics box.
+	Stored calibration values
+		slope 500 umol m-2 s-1/ V
+		intercept 0 
+
+
+flow: the flow rate of the water in meters per second
+	flow rate was measured in meters per second by the Vernier Flow Rate Sensor 
+	(without any spacer on the bottom) (accurate to 0.04 m/s, resolution of 0.0012 m/s). 	
+	https://www.vernier.com/files/manuals/flo-bta.pdf
+	Note that this sensor does not measure really low flows well, there were times 
+	when the water could be seen to be moving very slowly but the propeller did 
+	not spin at all.
+	Flow measurement was taken by facing the propeller upstream and taking a 
+	10 second average.
+	The flow rate sensor was zeroed before measurements began.
+  
+  
+turb: Turbidity was measured in Nephelometric Turbidity Units (NTU) by the 
+  Vernier Turbidity Sensor (accurate to ±2 NTU for readings under 25 NTU). 	
+  https://www.vernier.com/files/manuals/trb-bta.pdf
+	Samples of water from each location were taken with a clean turbidity bottle 
+	(https://www.vernier.com/products/accessories/trb-bot/)
+	Calibration was done using Millipore filtered RO water and the 100 NTU 
+	calibration bottle that came with the sensor.  
+	All bottles were tipped upside down three times before a measurement was taken 
+	or calibration was performed
+	Bottles were wiped clean by a Kim Wipe before the bottle was placed in the sensor.
+	
+	
+cond: Conductivity was measured in µS/cm by the Vernier Conductivity Probe 
+  (accurate to ±2% of full-scale). https://www.vernier.com/manuals/con-bta/
+  
+  A sample of water was taken from each microhabitat and measured in lab that 
+  afternoon (right after sampling) or the next morning
+  
+	The conductivity probe was calibrated with Millipore filtered RO water and 
+	conductivity standard solution (low) of 150 µ S/cm. 
+	https://www.vernier.com/products/accessories/con-lst/
+
+	Low range: 0 to 200 µS/cm (0 to 100 mg/L TDS)
+	Mid range: 0 to 2000 µS/cm (0 to 1000 mg/L TDS)
+	High range: 0 to 20,000 µS/cm (0 to 10,000 mg/L TDS)
+
+nitrate: the concentration of Nitrate (NO3–) in mg/L (=ppm) in the water as 
+  measured by the Vernier Nitrate Ion-Selective Electrode
+  (accurate to ±10% of full scale (calibrated 1 to 100 mg/L)). 
+  https://www.vernier.com/product/nitrate-ion-selective-electrode/
+  
+  A sample of water was taken from each microhabitat and measured in lab that 
+  afternoon (right after sampling) or the next morning
+  
+  The Nitrate Ion-Selective Electrode was calibrated with a low (1 mg/L) and 
+  high (100 mg/L) Nitrate standard that were each purchased from Vernier 
+  (catalog codes NO3-LST and NO3_HST respectively).
+
+  These measurements were begun in Summer 2022 (we did not have the equipment to
+  measure it before then)
+
+alkalinity: the total alkalinity of a water sample in ppm of CaCO3
+
+  Starting in Fall 2022, alkalinity was measured using the Hanna Instruments 
+  Freshwater Alkalinity Checker (order code: HI775, 
+  https://www.hannainst.com/hi775-alkalinity-freshwater.html). 
+  This colorimeter has a resolution of 1 ppm and and accuracy of ±5 ppm or ±5% 
+  of reading. The instrument displays the alkalinity concentration in ppm of CaCO3. 
+  Alkalinity conversion: 1 ppm CaCO3 = 0.02 meq/L = 0.056 dkH
+  
+  A sample of water was taken from each microhabitat and measured in lab that 
+  afternoon (right after sampling) or the next morning
+
+phosphate: the phosphate (PO4) level of a water sample in ppm of (PO4)3- 
+
+  In Fall 2022, phosphate was measured using the Hanna Instruments 
+  High Range Phosphate Colorimeter Checker 
+  (order code: HI717, https://www.hannainst.com/hi717-phosphate-hr.html). 
+  This instrument has a resolution of 0.1 ppm, a range of 0-30ppm, and an 
+  accuracy of ±1.0 ppm or ±5% of reading.
+  
+  The values were lower than anticipated, so in Summer 2023 we switched to using
+  the Hanna Instruments Low Range Phosphate Colorimeter Checker 
+  (order code: HI713, https://www.hannainst.com/hi713-phosphate-lr.html). 
+  This instrument has a resolution of 0.01 ppm, a range of 0-2.50ppm, and an 
+  accuracy of ±0.04 ppm or ±4% of reading.
+
+  A sample of water was taken from each microhabitat and measured in lab that 
+  afternoon (right after sampling) or the next morning
+
+notes: notes from sampling
+
