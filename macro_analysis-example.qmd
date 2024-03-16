@@ -1,7 +1,8 @@
 ---
-title: "Macroinvertebrate Data Analysis"
+title: "macro_analysis_Pratt"
+subtitle: "BIO 131 Project Data Analysis"
 author: "Marney Pratt"
-date: "October 31, 2023"
+date: "March 25, 2024"
 format: 
   html:
     code-overflow: wrap
@@ -605,4 +606,6 @@ Don't forget to "render" your .qmd file when you are done. Make sure that each c
 
 Render straight to HTML, open the HTML file in your browser, and then "print" to a PDF file.
 
-Insert a file printout of the PDF in the "Project Data Analysis" section of your Lab Notebook.
+Make sure you add your name to the PDF file name: macro_analysis_Pratt.pdf
+
+Save a copy the PDF in your GROUP FOLDER.

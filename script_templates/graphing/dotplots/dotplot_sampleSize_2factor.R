@@ -32,7 +32,7 @@ ggplot(
     fun = median,       #graphs the median
     geom = "crossbar",  #crossbar shape
     width = 0.5,        #width of the bar
-    size = 0.75,        #size
+    linewidth = 0.75,   #thickness of bar
     color = "black",    #color 
     position = position_dodge(width = 1), #match to dodge.width above
     show.legend = FALSE) +   #removes extra key

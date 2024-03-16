@@ -1,7 +1,8 @@
 ---
-title: "Macroinvertebrate Data Analysis"
+title: "macro_analysis_NAME"
+subtitle: "BIO 131 Project Data Analysis"
 author: "Your Name"
-date: "November , 2023"
+date: "March , 2024"
 format: 
   html:
     code-overflow: wrap
@@ -71,12 +72,11 @@ Make a table of the data that you used in your analysis (how many samples and ho
 
 ```
 
-
 ## Descriptive Statistics
 
-Use the template code below to calculate the descriptive statistics for your variable of interest. 
+Use the template code below to calculate the descriptive statistics for your variable of interest.
 
-The output of this code should NOT all be reported in your paper. Decide which (if any) of the descriptive statistics you should report and make sure to round the values. 
+The output of this code should NOT all be reported in your paper. Decide which (if any) of the descriptive statistics you should report and make sure to round the values.
 
 Descriptive statistics can be reported in the text of the results (see this [example results section](https://docs.google.com/document/d/1vwyOSmhZzTuIfAEbpeiv3yCsU1UMZDsTXgnbE80nPTU/edit?usp=sharing)) if relatively simple, or you can make a formatted table of just the necessary, rounded values to include in your paper.
 
@@ -136,7 +136,7 @@ Find the code you need to visualize (=graph) your data by looking in the "graphi
 
 To save your graph with the `ggsave()` function, you need to name the resulting file with surrounding " ", and indicate the size via height, width, and units. Don't forget to save the graph with a dpi call at 300-500 to make it nice and crisp! Look at the `ggsave()` help file for more information and options.
 
-Note that the code below will save the most recent graph you made and put it into the "images" folder (make sure to replace the underlined part with a name for your graph file that will help you find the file again later)
+Note that the code below will save the most recent graph you made and put it into the "images" folder (make sure to replace the word "Name" for your name within the filename so you will be able to tell which graph is yours later)
 
 ```{r}
 #| label: Save your graph
@@ -144,11 +144,23 @@ Note that the code below will save the most recent graph you made and put it int
 
 
 # save the graph!
-ggsave(filename="images/___.png",  #recommended to use.png or .jpg file types
+ggsave(filename="images/MacroGraph_Name.png",  #recommended to use.png or .jpg file types
        height = 5, width = 8, units = "in", 
        dpi = 300)
 
 ```
+
+The above code will save the last graph you made and call it "MacroGraph_Name.png" (make sure you replaced Name with your name. for example: MacroGraph_Pratt.png). This file will appear in the images folder within the project folder under the Files tab in the lower right quadrant of this window.
+
+If you are working on the Smith server, you will first need to export this file to your computer:
+
+-   Check the box next to the "MacroGraph_Name.png" file
+
+-   Go to the "More" menu with the gear icon and click the drop down arrow
+
+-   Select "Export" and then save the file to your computer
+
+You can now insert this graph into your Results document (see the lab notebook entry for today for more details).
 
 # Citing R in Your Paper
 
@@ -193,10 +205,29 @@ citation("tidyverse")
 
 ```
 
-## Rendering
 
-Don't forget to "render" your .qmd file when you are done. Make sure that each code chunk has an unique label name or no name before you render. Make sure all your files are in the project folder.
+## Render this File to HTML & Print to PDF
+
+Don't forget to "render" your .qmd file when you are done.
+
+-   Before you Render
+
+    -   Make sure that each code chunk has an unique label name or no name
+
+    -   Save this file and give it the name "macro_analysis_Name.qmd" (replace your name with the "Name" part)
+
+-   Render this Quarto file to HTML (just select the Render menu item at the top of this window)
+
+-   If the HTML file didn't already open in your browser, then click on the name of the file in the Files window and select "View in Web Browser"
+
+-   Once the HTML file is open in your web browser, then use the print function within your browser to save it as a PDF. Please name your PDF file "macro_analysis_Name.pdf" (replace your name with the "Name" part)
+
+-   Make sure the PDF file is saved somewhere on your computer that you can get to
+
+-   Place a copy of the PDF file in your GROUP Google Drive folder for this class
 
 Render straight to HTML, open the HTML file in your browser, and then "print" to a PDF file.
 
-Insert a file printout of the PDF in the "Project Data Analysis" section of your Lab Notebook.
+Make sure you add your name to the PDF file name: macro_analysis_Pratt.pdf
+
+Save a copy the PDF in your GROUP FOLDER.
