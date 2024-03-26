@@ -5,6 +5,12 @@
 ##calculate the number of macros in each sampleID
 macro.total <- macros |> 
   
+  #join taxonomic information 
+  left_join(master.taxa) |> 
+  
+  #filter out midges
+  filter(family == "Chironomidae") |> 
+  
   #calculate the number of macros in each sampleID
   group_by(sampleID, benthicArea) |> 
   summarize(total.macros = sum(number, na.rm = TRUE))
@@ -17,8 +23,10 @@ macro.ffg <- macros |>
   #join taxonomic information 
   left_join(master.taxa) |> 
   
+  #filter out midges
+  filter(family == "Chironomidae") |> 
+  
   # Summarize for each sampleID and each FFG 
-  # note you can exchange FFG with another taxonomic level of interest
   group_by(sampleID, FFG) |> 
   dplyr::summarise(number = sum(number, na.rm = TRUE)) |> 
   
@@ -40,8 +48,7 @@ macro.ffg <- macro.ffg |>
 ##join the two datasets
 macro.joined  <- left_join(macro.total, macro.ffg) |> 
   
-  #calc the relative abundance of each taxon
-  # replace the blanks with the name of each taxon
+  #calc the relative abundance & density of each FFG
   mutate(relab = number/total.macros,
          density = number/benthicArea)
 
@@ -65,4 +72,7 @@ my.df <- left_join(macro.joined, variables)  |>
   
   #filter out anything you don't want
   #the example below would filter for just scrapers
-  dplyr::filter(FFG == "scr") 
+  dplyr::filter(FFG == "scr")  |> 
+  
+  #remove rows with any missing data
+  na.omit()
