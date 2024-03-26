@@ -9,7 +9,7 @@ macro.total <- macros |>
   left_join(master.taxa) |> 
   
   #filter out midges
-  filter(family == "Chironomidae") |> 
+  filter(family != "Chironomidae") |> 
   
   #calculate the number of macros in each sampleID
   group_by(sampleID, benthicArea) |> 
@@ -24,7 +24,7 @@ macro.ffg <- macros |>
   left_join(master.taxa) |> 
   
   #filter out midges
-  filter(family == "Chironomidae") |> 
+  filter(family != "Chironomidae") |> 
   
   # Summarize for each sampleID and each FFG 
   group_by(sampleID, FFG) |> 
