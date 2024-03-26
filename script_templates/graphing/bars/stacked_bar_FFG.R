@@ -24,8 +24,13 @@ aes(x = ___,       #put the factor on the x-axis
                "scrapers", 
                "shredders" )) +
   
-  #remove repeated key
-  guides(color = FALSE) +
+  scale_color_discrete(
+    name = "Functional Feeding Groups",
+    labels = c("collector filterers", 
+               "collector gatherers",
+               "predators", 
+               "scrapers", 
+               "shredders" )) +
   
   #additional formatting
   coord_cartesian(ylim = c(0,1), expand = FALSE, clip = 'off') +
