@@ -5,6 +5,12 @@
 ##calculate the number of macros in each sampleID
 macro.total <- macros |> 
   
+  #join taxonomic information 
+  left_join(master.taxa) |> 
+  
+  #filter out midges
+  filter(family == "Chironomidae") |> 
+  
   #calculate the number of macros in each sampleID
   group_by(sampleID, benthicArea) |> 
   summarize(total.macros = sum(number, na.rm = TRUE))
@@ -14,6 +20,9 @@ macros.tol <- macros  |>
   
   #join taxonomic information 
   left_join(master.taxa)  |> 
+  
+  #filter out midges
+  filter(family == "Chironomidae") |> 
   
   #remove NAs
   filter(!is.na(tolerance)) |> 
@@ -69,4 +78,7 @@ my.df <- left_join(macro.joined, variables) |>
   
   #filter out anything you don't want
   #the example below would filter for just the sensitive macros
-  dplyr::filter(tolerance.factor == "Sensitive") 
+  dplyr::filter(tolerance.factor == "Sensitive") |> 
+  
+  #remove rows with any missing data
+  na.omit()
