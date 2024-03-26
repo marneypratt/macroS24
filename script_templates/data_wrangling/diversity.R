@@ -9,17 +9,18 @@ macro.long <- macros |>
   #join taxa info
   left_join(master.taxa) |>
   
-  #diversity for mix of taxa (organism_aggr)
-  #change organism_aggr to family or other taxonomic unit if desired
+  #diversity for families
+  #for mix of taxa use organism_aggr instead of family
+  #2018 is removed by default because of aggregated samples in the FALL
   dplyr::filter(!is.na(invDens), year !="2018") |> 
-  dplyr::select(sampleID, organism_aggr, invDens) |> 
-  group_by(sampleID, organism_aggr) |> 
+  dplyr::select(sampleID, family, invDens) |> 
+  group_by(sampleID, family) |> 
   dplyr::summarise(density = sum(invDens))
 
 
 # convert to wide format
 macro.wide <- macro.long |> 
-  pivot_wider(names_from = organism_aggr, 
+  pivot_wider(names_from = family, 
               values_from = density,
               values_fill = list(density = 0),
               values_fn = list(density = sum)) |>
