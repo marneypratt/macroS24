@@ -38,8 +38,7 @@ macro.family <- macros |>
 ##join the two datasets
 macro.joined  <- left_join(macro.total, macro.family) |> 
   
-  #calc the relative abundance of each taxon
-  # replace the blanks with the name of each taxon
+  #calc the relative abundance & density
   mutate(relab = number/total.macros,
          density = number/benthicArea)
 
