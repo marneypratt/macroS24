@@ -11,7 +11,7 @@ macro.total <- macros |>
 
 
 
-##calculate the number of each taxon of interest in each sampleID
+##calculate the number of each family of interest in each sampleID
 macro.family <- macros |> 
   
   #join taxonomic information 
@@ -38,8 +38,7 @@ macro.family <- macros |>
 ##join the two datasets
 macro.joined  <- left_join(macro.total, macro.family) |> 
   
-  #calc the relative abundance of each taxon
-  # replace the blanks with the name of each taxon
+  #calc the relative abundance & density of each taxon
   mutate(relab = number/total.macros,
          density = number/benthicArea)
 
@@ -63,4 +62,7 @@ my.df <- left_join(macro.joined, variables) |>
   
   #filter out anything you don't want
   #the example below would filter out just the year 2018
-  dplyr::filter(year != "2018") 
+  dplyr::filter(year != "2018") |> 
+  
+  #remove rows with any missing data
+  na.omit()
