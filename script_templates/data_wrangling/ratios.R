@@ -71,4 +71,7 @@ my.df <- left_join(macro.ratios, variables) |>
   
   #filter out anything you don't want
   #the example below would filter out just the year 2018
-  dplyr::filter(year != "2018")
+  dplyr::filter(year != "2018") |> 
+  
+  #remove rows with any missing data
+  na.omit()

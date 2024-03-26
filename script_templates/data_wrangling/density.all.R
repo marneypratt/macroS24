@@ -3,6 +3,7 @@
 
 # macros and master.taxa data files must be imported before you can run the code below
 
+#calculate the density of all macros
 macro.density <- macros  |>  
   
   # Summarize for each sampleID 
@@ -29,4 +30,7 @@ my.df <- left_join(macro.density, variables) |>
   
   #filter out anything you don't want
   #the example below would filter out just the year 2018
-  dplyr::filter(year != "2018") 
+  dplyr::filter(year != "2018") |> 
+  
+  #remove rows with any missing data
+  na.omit()
