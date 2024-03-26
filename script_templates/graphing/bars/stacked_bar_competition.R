@@ -1,5 +1,6 @@
 #this code will make stacked bar graphs for 
-#relative abundance of functional feeding groups
+#relative abundance of families
+#this graph requires the competition.long.R data wrangling code
 
 ggplot(
 data = ___, #put the data frame name here
