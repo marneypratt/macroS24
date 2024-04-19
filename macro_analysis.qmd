@@ -92,7 +92,7 @@ x.var <- "___" #put the name of the column you want to summarize in the blank he
 
 #calculate descriptive stats
 df.sum <- my.df |> 
-  group_by(___) |> #put the grouping variable(s) here
+  group_by(___) |> #put the factors here or leave empty parentheses if no factors
   filter(!is.na(.data[[x.var]])) |> # remove missing values 
   
   #remove the lines below that you don't need 
@@ -105,6 +105,8 @@ df.sum <- my.df |>
             min = round(min(.data[[x.var]]), digits=2),
             max = round(max(.data[[x.var]]), digits=2),
             N = n())
+
+df.sum
 
 #create the table
 ft <- flextable(df.sum,
